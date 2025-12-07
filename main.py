@@ -1,5 +1,12 @@
+import os
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+
+# -----------------------------------------
+# Token (من Environment Variable)
+# -----------------------------------------
+TOKEN = os.getenv("TOKEN")  # ضع TOKEN في Render كـ Environment Variable
 
 # -----------------------------------------
 # Start Message (reusable)
@@ -81,11 +88,16 @@ async def callbacks(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
 
 # -----------------------------------------
-# Run Bot
+# Main
 # -----------------------------------------
-app = ApplicationBuilder().token("8394475180:AAHQThYadn8eZlv1xe6Jn63-KPWLedhyXCM").build()
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CallbackQueryHandler(callbacks))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CallbackQueryHandler(callbacks))
 
-app.run_polling()
+    # استخدم asyncio.run بدلاً من app.run_polling()
+    asyncio.run(app.run_polling())
+
+if __name__ == "__main__":
+    main()
